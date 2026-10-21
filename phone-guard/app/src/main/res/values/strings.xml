@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">PhoneGuard</string>
+    <string name="tab_phishing">링크 검사</string>
+    <string name="tab_device">기기 점검</string>
+    <string name="tab_permissions">권한 점검</string>
+    <string name="url_hint">검사할 링크를 붙여넣으세요</string>
+    <string name="btn_analyze">검사하기</string>
+    <string name="btn_device_scan">기기 보안 점검 실행</string>
+    <string name="btn_perm_scan">설치 앱 권한 점검</string>
+</resources>

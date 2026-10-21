@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="pg_primary">#1565C0</color>
+    <color name="pg_on_primary">#FFFFFF</color>
+    <color name="pg_safe">#2E7D32</color>
+    <color name="pg_warn">#F9A825</color>
+    <color name="pg_danger">#C62828</color>
+</resources>
