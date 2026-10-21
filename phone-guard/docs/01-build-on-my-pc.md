@@ -26,6 +26,16 @@ git checkout ccr-01095dca-2zjm50
 > git이 없으면: GitHub 저장소 페이지 → 브랜치를 `ccr-01095dca-2zjm50`으로 바꾼 뒤
 > `Code` → `Download ZIP` 으로 받아도 된다.
 
+> ⚠️ **Windows**: 폴더 경로에 **한글이나 공백이 없게** 한다. 예를 들어
+> `C:\Users\홍길동\바탕 화면\...` 대신 `C:\dev\` 에 받는다.
+> 경로에 한글이 있으면 Android 빌드 도구가 `Your project path contains non-ASCII characters`
+> 에러를 내며 멈춘다.
+>
+> ```powershell
+> mkdir C:\dev; cd C:\dev
+> git clone https://github.com/haesung-bot/minesweeper-craft-privacy.git
+> ```
+
 ## 3단계. Android Studio로 열기
 
 1. Android Studio → `File` → `Open` → **`phone-guard` 폴더**를 선택
@@ -58,9 +68,25 @@ Android Studio 아래쪽 `Terminal` 탭에서:
 1. `설정` → `휴대전화 정보` → `소프트웨어 정보` → **`빌드번호`를 7번 연속 탭**
    → "개발자 모드를 켰습니다"
 2. `설정` → `개발자 옵션` → **`USB 디버깅` 켜기**
-3. USB 케이블로 PC 연결 → 폰에 뜨는 "USB 디버깅을 허용하시겠습니까?" → `허용`
-4. Windows에서 폰이 안 잡히면 삼성 USB 드라이버 설치:
+3. **One UI 6 이상이면 `자동 차단` 끄기**: `설정` → `보안 및 개인정보 보호` → `자동 차단`
+   - 켜져 있으면 USB 명령과 앱 설치가 막혀 Android Studio에서 설치가 안 된다
+   - 이건 실제로 폰을 지켜주는 보안 기능이니 **실습이 끝나면 다시 켠다**
+4. USB 케이블로 PC 연결 → 폰에 뜨는 "USB 디버깅을 허용하시겠습니까?" →
+   `이 컴퓨터에서 항상 허용` 체크 → `허용`
+   - 팝업에 나오는 RSA 지문은 "이 PC를 믿어도 되냐"는 질문이다. **내 PC일 때만** 허용한다
+5. Windows에서 폰이 안 잡히면 삼성 USB 드라이버 설치:
    https://developer.samsung.com/android-usb-driver
+6. 연결됐는지 PowerShell에서 확인:
+
+   ```powershell
+   & "$env:LOCALAPPDATA\Android\Sdk\platform-tools\adb.exe" devices
+   ```
+
+   | 결과 | 의미 |
+   |---|---|
+   | `R3CX... device` | 정상 연결 ✅ |
+   | `unauthorized` | 폰 화면의 허용 팝업을 아직 안 누름 |
+   | 아무것도 안 나옴 | 케이블(충전 전용인지), 드라이버, USB 디버깅 확인 |
 
 ## 6단계. 앱 설치하고 실행
 
@@ -91,6 +117,11 @@ Android Studio 상단에서 기기를 고르고 초록색 ▶ (`Run 'app'`) 클�
 | 상태를 바꿀 때마다 결과도 바뀐다 | 탐지가 실제로 작동한다 ✅ |
 | 바꿨는데 결과가 그대로다 | 탐지 로직에 버그가 있다 → 고칠 거리 발견! |
 
+> 📌 **이미 알려진 한계**: `알 수 없는 출처 앱 설치` 항목은 Android 8 이상에서
+> `canRequestPackageInstalls()` 를 쓰는데, 이 함수는 **폰 전체가 아니라 PhoneGuard 자신이**
+> 설치 권한을 가졌는지만 알려준다. 그래서 다른 앱(파일 관리자 등)에 설치를 허용해도
+> 거의 항상 ✅로 나온다. 직접 확인해 보고, 다음 단계에서 고쳐볼 과제로 남겨둔다.
+
 (A) 에뮬레이터라면 `루팅 흔적`에 **`test-keys 빌드`** 가 뜰 수 있다.
 에뮬레이터 이미지 중 일부가 test-keys로 서명돼 있기 때문인데, 이게 바로
 **오탐(false positive)** 이다. 보안 도구가 왜 "확실하다"가 아니라 "의심 신호"로 말해야 하는지
@@ -114,6 +145,8 @@ Android Studio 상단에서 기기를 고르고 초록색 ▶ (`Run 'app'`) 클�
 ## 실습이 끝나면 꼭
 
 - 실제 폰을 썼다면: **USB 디버깅 끄기** (평소엔 꺼두는 게 안전)
+- 갤럭시에서 껐던 **`자동 차단` 다시 켜기**
+- `개발자 옵션` → `USB 디버깅 권한 승인 취소`: 허용했던 PC 기록을 지운다
 - APK 파일로 설치했다면: 파일 관리자 앱의 **"출처를 알 수 없는 앱 설치" 권한 끄기**
 
 ## 자주 막히는 곳
@@ -124,3 +157,6 @@ Android Studio 상단에서 기기를 고르고 초록색 ▶ (`Run 'app'`) 클�
 | `JAVA_HOME is not set` | Android Studio 안의 Terminal 탭에서 실행한다 (내장 JDK 사용) |
 | 폰이 기기 목록에 안 보임 | 케이블이 충전 전용인지 확인, USB 디버깅 허용 팝업 다시 확인 |
 | `INSTALL_FAILED_UPDATE_INCOMPATIBLE` | 폰에서 기존 PhoneGuard를 지우고 다시 설치 |
+| `Your project path contains non-ASCII characters` | 프로젝트를 `C:\dev\` 처럼 한글 없는 경로로 옮긴다 |
+| 설치 중 `INSTALL_FAILED_USER_RESTRICTED` 또는 설치가 조용히 실패 | 갤럭시 `자동 차단`이 켜져 있다 → 끄고 재시도 |
+| 설치할 때 "Play 프로텍트" 경고 | 내가 직접 빌드한 앱이라 정상이다. `앱 스캔` 또는 `그래도 설치` |
