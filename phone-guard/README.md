@@ -43,8 +43,8 @@ cd phone-guard
 ./gradlew connectedDebugAndroidTest
 ```
 
-> 참고: 이 저장소를 만든 클라우드 환경에는 Android SDK가 없어서 APK 빌드/계측 테스트는
-> 본인 PC에서 실행합니다. 순수 로직 테스트(`./gradlew test`)는 어디서나 됩니다.
+> 처음이라면 단계별 가이드를 따라가세요: [docs/01-build-on-my-pc.md](docs/01-build-on-my-pc.md)
+> (Android Studio 설치 → 빌드 → 폰/에뮬레이터 설치 → 첫 보안 점검 실습)
 
 ---
 
