@@ -20,6 +20,9 @@ class MainActivity : AppCompatActivity() {
     private val micWatchdog by lazy { MicWatchdog(this) }
     private var isWatchingMic = false
 
+    /** mictest 모듈(표적 앱)의 패키지명. 감시 결과에서 "자가 테스트"임을 알려주기 위함. */
+    private val testTargetPackage = "com.phoneguard.mictest"
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -35,6 +38,13 @@ class MainActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         if (isWatchingMic && micWatchdog.isSupported) micWatchdog.stop()
+    }
+
+    private fun isPackageInstalled(pkg: String): Boolean = try {
+        packageManager.getPackageInfo(pkg, 0)
+        true
+    } catch (_: Exception) {
+        false
     }
 
     private fun analyzeUrl() {
@@ -114,13 +124,22 @@ class MainActivity : AppCompatActivity() {
                 pkg
             }
             val state = if (active) "🔴 시작" else "⚪ 종료"
-            binding.output.append("\n[실시간] $label ($pkg) 마이크 사용 $state")
+            val tag = if (pkg == testTargetPackage) "✅ [자가 테스트 표적 감지됨] " else ""
+            binding.output.append("\n$tag$label ($pkg) 마이크 사용 $state")
         }
 
         if (started) {
             isWatchingMic = true
             binding.btnMicWatch.text = getString(R.string.btn_mic_watch_stop)
-            binding.output.text = "[실시간 마이크 감시 시작]\n다른 앱이 마이크를 켜거나 끄면 여기 표시돼요.\n"
+            binding.output.text = buildString {
+                appendLine("[실시간 마이크 감시 시작]")
+                appendLine("다른 앱이 마이크를 켜거나 끄면 여기 표시돼요.")
+                if (isPackageInstalled(testTargetPackage)) {
+                    appendLine("✅ 테스트 표적(MicTest Target) 설치 확인됨 — 그 앱에서 테스트 버튼을 눌러보세요.")
+                } else {
+                    appendLine("💡 테스트 표적 앱(MicTest Target)을 설치하면 이 감시가 실제로 작동하는지 바로 확인할 수 있어요.")
+                }
+            }
         } else {
             binding.output.text = "실시간 감시를 시작할 수 없었어요(기기 제한).\n" +
                 "대신 설정 > 보안 및 개인정보 보호 > 권한 관리자 > 마이크 에서 확인해 보세요."

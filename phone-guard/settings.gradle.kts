@@ -21,3 +21,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "PhoneGuard"
 include(":app")
+include(":mictest")

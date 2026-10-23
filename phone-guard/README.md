@@ -17,6 +17,7 @@ Android(Kotlin) 학습 프로젝트.
 | 🔐 암호화 비밀 금고 | Android Keystore + EncryptedSharedPreferences로 비밀 보관 | `vault/SecureVault.kt` |
 | 🧪 위험 권한 앱 검사 | 설치된 앱의 권한 조합을 위험도로 점수화 | `permissions/PermissionRiskScorer.kt` |
 | 🎙️ 마이크 권한 점검 + 실시간 감시 | 마이크 권한 조합 점수화, 다른 앱의 마이크 사용을 실시간 감시 | `mic/MicRiskAnalyzer.kt`, `mic/MicWatchdog.kt` — 자세히: [docs/02-mic-guard.md](docs/02-mic-guard.md) |
+| 🎯 MicTest Target (표적 앱) | 감시 기능을 직접 터뜨려서 확인하는 테스트용 앱. 마이크를 진짜로 열지만 저장·전송은 전혀 안 함 | 모듈 `mictest/` — 자세히: [docs/03-mic-selftest.md](docs/03-mic-selftest.md) |
 
 설계 원칙: **판별 로직은 안드로이드 API에 의존하지 않는 순수 Kotlin으로 분리**했습니다.
 덕분에 PC에서 단위 테스트로 빠르게 검증하고, 기기 전용 부분만 계측 테스트로 확인합니다.
@@ -73,14 +74,17 @@ cd phone-guard
 
 ```
 phone-guard/
-├── app/
+├── app/                         # 🛡️ PhoneGuard (감시하는 쪽)
 │   ├── src/main/java/com/phoneguard/app/
 │   │   ├── MainActivity.kt
 │   │   ├── phishing/UrlRiskAnalyzer.kt
 │   │   ├── device/{DeviceSecurityChecker,RootIndicators}.kt
 │   │   ├── permissions/{InstalledAppScanner,PermissionRiskScorer}.kt
+│   │   ├── mic/{MicRiskAnalyzer,MicPermissionScanner,MicWatchdog}.kt
 │   │   └── vault/SecureVault.kt
 │   ├── src/test/...            # 순수 로직 단위 테스트 (JUnit)
 │   └── src/androidTest/...     # 기기 계측 테스트
+├── mictest/                     # 🎯 MicTest Target (감시당하는 표적 앱)
+│   └── src/main/java/com/phoneguard/mictest/MainActivity.kt
 └── (Gradle 설정)
 ```
