@@ -16,6 +16,7 @@ Android(Kotlin) 학습 프로젝트.
 | 📋 기기 보안 상태 점검 | 화면잠금·USB 디버깅·출처불명 설치·루팅 흔적 점검 | `device/RootIndicators.kt` |
 | 🔐 암호화 비밀 금고 | Android Keystore + EncryptedSharedPreferences로 비밀 보관 | `vault/SecureVault.kt` |
 | 🧪 위험 권한 앱 검사 | 설치된 앱의 권한 조합을 위험도로 점수화 | `permissions/PermissionRiskScorer.kt` |
+| 🎙️ 마이크 권한 점검 + 실시간 감시 | 마이크 권한 조합 점수화, 다른 앱의 마이크 사용을 실시간 감시 | `mic/MicRiskAnalyzer.kt`, `mic/MicWatchdog.kt` — 자세히: [docs/02-mic-guard.md](docs/02-mic-guard.md) |
 
 설계 원칙: **판별 로직은 안드로이드 API에 의존하지 않는 순수 Kotlin으로 분리**했습니다.
 덕분에 PC에서 단위 테스트로 빠르게 검증하고, 기기 전용 부분만 계측 테스트로 확인합니다.

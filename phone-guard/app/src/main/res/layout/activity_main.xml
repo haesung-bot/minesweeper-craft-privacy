@@ -48,6 +48,26 @@
             android:layout_marginTop="8dp"
             android:text="@string/btn_perm_scan" />
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="16dp"
+            android:background="#DDDDDD" />
+
+        <Button
+            android:id="@+id/btnMicScan"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/btn_mic_scan" />
+
+        <Button
+            android:id="@+id/btnMicWatch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/btn_mic_watch_start" />
+
         <TextView
             android:id="@+id/output"
             android:layout_width="match_parent"

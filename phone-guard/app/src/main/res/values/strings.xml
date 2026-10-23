@@ -8,4 +8,7 @@
     <string name="btn_analyze">검사하기</string>
     <string name="btn_device_scan">기기 보안 점검 실행</string>
     <string name="btn_perm_scan">설치 앱 권한 점검</string>
+    <string name="btn_mic_scan">마이크 권한 점검</string>
+    <string name="btn_mic_watch_start">실시간 마이크 감시 시작</string>
+    <string name="btn_mic_watch_stop">실시간 마이크 감시 중지</string>
 </resources>
