@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- 마이크 몸통 -->
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M46,38 A8,8 0 0,1 62,38 L62,50 A8,8 0 0,1 46,50 Z" />
+    <!-- 받침대 -->
+    <path
+        android:pathData="M40,48 A14,14 0 0,0 68,48 M54,62 L54,71 M47,72 L61,72"
+        android:strokeWidth="4"
+        android:strokeColor="#FFFFFFFF"
+        android:strokeLineCap="round" />
+    <!-- 소리 감지 물결 -->
+    <path
+        android:pathData="M34,41 A10,10 0 0,0 34,55 M74,41 A10,10 0 0,1 74,55"
+        android:strokeWidth="3.5"
+        android:strokeColor="#FF7DD3FC"
+        android:strokeLineCap="round" />
+    <path
+        android:pathData="M28,36 A17,17 0 0,0 28,60 M80,36 A17,17 0 0,1 80,60"
+        android:strokeWidth="3.5"
+        android:strokeColor="#997DD3FC"
+        android:strokeLineCap="round" />
+</vector>

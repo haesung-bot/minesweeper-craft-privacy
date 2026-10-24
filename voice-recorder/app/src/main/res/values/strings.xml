@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">소리 감지 녹음기</string>
+    <string name="status_off">꺼짐</string>
+    <string name="start">녹음 대기 시작</string>
+    <string name="stop">정지</string>
+    <string name="stopping">정지하는 중…</string>
+    <string name="upload_now">지금 업로드 · 실패 파일 다시 시도</string>
+    <string name="section_drive">구글 드라이브 연결</string>
+    <string name="drive_help">PC에서 Apps Script를 배포해 받은 웹 앱 주소(…/exec)와, 스크립트에 적은 비밀번호를 넣으세요.</string>
+    <string name="url_hint">https://script.google.com/macros/s/…/exec</string>
+    <string name="paste">붙여넣기</string>
+    <string name="secret_hint">비밀번호 (스크립트의 SECRET과 같게)</string>
+    <string name="test">연결 테스트</string>
+    <string name="section_detect">소리 감지</string>
+    <string name="section_etc">기타</string>
+    <string name="wifi_only">와이파이에서만 업로드</string>
+    <string name="delete_after">업로드에 성공하면 폰에서 지우기</string>
+    <string name="auto_start">폰을 다시 켜면 자동으로 녹음 대기</string>
+    <string name="battery">배터리 최적화에서 빼기</string>
+    <string name="footer">녹음 대기 중에는 상단 알림이 항상 표시돼요. 화면을 꺼도 계속 동작하니 충전기에 꽂아 두세요.</string>
+</resources>

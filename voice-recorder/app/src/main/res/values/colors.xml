@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="bg">#FFF3F5F8</color>
+    <color name="card">#FFFFFFFF</color>
+    <color name="accent">#FF2962FF</color>
+    <color name="warning">#FFE65100</color>
+    <color name="recording">#FFE53935</color>
+    <color name="ic_bg">#FF1E3A8A</color>
+</resources>
