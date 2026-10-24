@@ -1,0 +1,67 @@
+name: voice-recorder APK
+
+# 소리 감지 녹음기(voice-recorder/) APK를 빌드하고
+# 릴리스 'voice-recorder-latest'에 최신 APK를 올린다.
+on:
+  push:
+    branches: [voice-recorder]
+    paths:
+      - 'voice-recorder/**'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: voice-recorder-apk
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    defaults:
+      run:
+        working-directory: voice-recorder
+    env:
+      BUILD_NUMBER: ${{ github.run_number }}
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - uses: gradle/actions/setup-gradle@v4
+
+      - name: Test, lint, build
+        run: |
+          chmod +x gradlew
+          set -o pipefail
+          ./gradlew --no-daemon --stacktrace testDebugUnitTest lintDebug assembleRelease 2>&1 | tee "$RUNNER_TEMP/build.log"
+
+      - name: Publish APK
+        run: |
+          cp app/build/outputs/apk/release/app-release.apk "$RUNNER_TEMP/soundcatch.apk"
+          gh release delete voice-recorder-latest --yes --cleanup-tag || true
+          gh release create voice-recorder-latest "$RUNNER_TEMP/soundcatch.apk" \
+            --target "$GITHUB_SHA" --prerelease \
+            --title "소리 감지 녹음기 (빌드 $BUILD_NUMBER)" \
+            --notes "안 쓰는 안드로이드 폰에서 soundcatch.apk 를 받아 설치하세요. 설정 방법은 voice-recorder/README.md 참고."
+          gh release delete voice-recorder-buildlog --yes --cleanup-tag || true
+
+      - name: Publish build log on failure
+        if: failure()
+        run: |
+          cd "$GITHUB_WORKSPACE/voice-recorder"
+          files="$RUNNER_TEMP/build.log"
+          if [ -d app/build/reports ]; then
+            (cd app/build && zip -qr "$RUNNER_TEMP/reports.zip" reports) && files="$files $RUNNER_TEMP/reports.zip"
+          fi
+          gh release delete voice-recorder-buildlog --yes --cleanup-tag || true
+          gh release create voice-recorder-buildlog $files \
+            --target "$GITHUB_SHA" --prerelease \
+            --title "voice-recorder build log" --notes "빌드 $BUILD_NUMBER 실패 로그"
