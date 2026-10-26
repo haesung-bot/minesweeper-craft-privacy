@@ -7,6 +7,8 @@ on:
     branches: [voice-recorder]
     paths:
       - 'voice-recorder/**'
+      - '!voice-recorder/google-apps-script/**'
+      - '!voice-recorder/**/*.md'
   workflow_dispatch:
 
 permissions:

@@ -6,6 +6,7 @@
 - 소리가 10초 동안 없으면 파일을 닫고 바로 드라이브로 업로드
 - 드라이브 `폰녹음/날짜/` 폴더에 `2026-10-24_14-35-12_1m05s.m4a` 형식으로 저장
 - 화면을 꺼도 동작, 인터넷이 끊기면 폰에 모아 뒀다가 연결되면 올림
+- (선택) Gemini 자동 받아쓰기 → 녹음 옆에 같은 이름의 `.txt` 저장
 
 ---
 
@@ -39,6 +40,34 @@
 가운데 막대로 감도를 맞춘다: 막대가 **빨간 선**을 넘으면 녹음이 시작된다.
 조용한데도 자꾸 녹음되면 감도를 낮추고, 작은 소리가 안 잡히면 높인다.
 
+## 4. 자동 받아쓰기 (선택, PC에서 3분)
+
+녹음이 드라이브에 올라오면 5분 안에 Gemini가 받아써서 같은 폴더에 같은 이름의 `.txt`로 저장한다.
+
+```
+녹음 2026-10-24 14:35:12 · 1분 05초
+
+[00:00] 화자1: 오늘 몇 시에 와?
+[00:03] 화자2: 일곱 시쯤 갈게.
+```
+
+1. https://aistudio.google.com/apikey → **API 키 만들기** → 복사
+2. Apps Script 편집기에 새 [`Code.gs`](google-apps-script/Code.gs)를 통째로 붙여넣고
+   `SECRET`(기존 값 그대로)과 `GEMINI_API_KEY`를 채운 뒤 저장
+3. 위쪽 함수 목록에서 **setup** 선택 → **실행** → 권한 허용 → 실행 로그에 ✅ 확인
+   (최근 7일 녹음도 받아쓰기 대기열에 들어가고, 1개는 바로 시험으로 받아쓴다)
+4. **배포 → 배포 관리 → 연필 → 버전: 새 버전 → 배포** (주소 그대로, 폰 앱도 그대로)
+
+- 모델은 `gemini-3.5-flash-lite` (무료 한도가 가장 넉넉함). 더 정확하게 하려면 `GEMINI_MODEL`을
+  `gemini-3.8-flash`로 바꾼다 (대신 무료 한도가 훨씬 적음).
+- 무료 한도를 넘으면 쉬었다가 자동으로 이어서 한다. 내 한도는 AI Studio에서 확인.
+- 실패하면 5분·30분·2시간·6시간 뒤 다시 시도하고, 5번 실패하면 `.txt`에 실패 이유를 남긴다.
+- 10분이 넘는 녹음은 10분씩 나눠 받아쓴 뒤 하나로 합친다.
+- 상태 확인: 브라우저로 `웹앱주소?secret=비밀번호` 열기 → 대기 개수·마지막 오류
+- 끄기: `GEMINI_API_KEY`를 비우고 저장 → 새 버전 배포
+- ⚠️ 무료 등급에서는 보낸 녹음이 구글 서비스 개선에 쓰일 수 있다(사람이 검토할 수도 있음).
+  원치 않으면 AI Studio에서 결제를 연결해 유료 등급으로 쓴다 (1시간 분량에 몇백 원 이하).
+
 ## 설정 값
 
 | 항목 | 기본값 | 설명 |
@@ -65,6 +94,8 @@
 - `voice-recorder/` 아래를 고쳐서 `voice-recorder` 브랜치에 푸시하면 GitHub Actions가
   테스트·린트·빌드 후 릴리스 `voice-recorder-latest`의 APK를 교체한다 (버전 코드 = 빌드 번호라 덮어 설치됨).
 - PC에서 빌드: Android Studio → Open → `voice-recorder` 폴더 → `.\gradlew.bat test assembleRelease`
+- 드라이브 스크립트 시험: `node voice-recorder/google-apps-script/code.test.js`
+  (가짜 Apps Script·Gemini 환경에서 업로드·받아쓰기·한도 초과·재시도 흐름 확인. 스크립트·문서만 바꾸면 APK는 다시 빌드하지 않음)
 
 ```
 app/src/main/java/com/soundcatch/recorder/
@@ -74,5 +105,5 @@ app/src/main/java/com/soundcatch/recorder/
   Uploader.kt        업로드 큐 (재시도·보류·삭제)
   DriveUploader.kt   Apps Script 웹앱 전송 프로토콜 — 순수 Kotlin, 단위 테스트 있음
   MainActivity.kt    화면 (상태·소리 막대·설정)
-google-apps-script/Code.gs  드라이브에 저장하는 웹앱
+google-apps-script/Code.gs  드라이브 저장 웹앱 + Gemini 자동 받아쓰기 (5분마다)
 ```
